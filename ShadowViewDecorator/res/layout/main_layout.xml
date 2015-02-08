@@ -1,0 +1,52 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayoutMain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="8dp"
+    tools:context="com.blogspot.techzealous.shadowviewdecorator.MainActivity" >
+    
+    <Button
+        android:id="@+id/buttonNext"
+        android:layout_width="60dp"
+        android:layout_height="58dp"
+        android:layout_toRightOf="@+id/buttonRectLeft"
+        android:text="Next"
+        android:background="@android:color/holo_green_light" />
+    
+    <Button
+        android:id="@+id/buttonRectLeft"
+        android:layout_width="108dp"
+        android:layout_height="58dp"
+        android:text="Add"
+        android:background="@drawable/button_100x50" />
+    
+    <Button
+        android:id="@+id/buttonRectRoundRight"
+        android:layout_width="108dp"
+        android:layout_height="58dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:text="Remove"
+        android:background="@drawable/button_rounded_100x50" />
+    
+    <LinearLayout 
+       	android:id="@+id/linearLayoutCircle"
+       	android:layout_width="match_parent"
+       	android:layout_height="wrap_content"
+       	android:layout_below="@id/buttonRectLeft"
+       	android:paddingTop="20dp"
+       	android:orientation="horizontal" >
+    	<Button
+        	android:id="@+id/buttonCircle"
+        	android:layout_width="66dp"
+        	android:layout_height="66dp"
+        	android:textColor="@color/white"
+        	android:textSize="30sp"
+        	android:textStyle="normal"
+        	android:text="+"
+        	android:background="@drawable/circle_60x60" />
+    </LinearLayout>
+    
+</RelativeLayout>

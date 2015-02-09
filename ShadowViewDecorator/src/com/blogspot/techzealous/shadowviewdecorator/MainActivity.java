@@ -1,8 +1,13 @@
 package com.blogspot.techzealous.shadowviewdecorator;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -59,5 +64,21 @@ public class MainActivity extends Activity {
 				mDecorator.dropShadowBoxBlur(mButtonCircle, 3, Color.YELLOW);
 			}
 		});
+	}
+	
+	private Bitmap gaussianBlur(Bitmap aBitmap, int aSize, int aShadowColor)
+	{
+		Bitmap bitmapRet = aBitmap;
+		
+//		RenderScript rs = RenderScript.create(MainActivity.this);
+//		final Allocation input = Allocation.createFromBitmap(rs, bitmapRet);
+//		final Allocation output = Allocation.createTyped(rs, input.getType());
+//		final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+//		script.setRadius(8f);
+//		script.setInput(input);
+//		script.forEach(output);
+//		output.copyTo(bitmapRet);
+		
+		return bitmapRet;
 	}
 }

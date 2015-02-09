@@ -17,12 +17,20 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v8.renderscript.Allocation;
+import android.support.v8.renderscript.Element;
+import android.support.v8.renderscript.RenderScript;
+import android.support.v8.renderscript.ScriptIntrinsicBlur;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 public class ShadowViewDecorator {
 
+	private static final String LOG = "ShadowViewDecorator";
+	private static final String STR_SDK_LESS_THAN_JELLYBEANMR1 = "Warning current cannot make Guassian blur. ScriptIntrinsicBlur requires API Level 17+, current SDK Level is ";
 	private static final String STR_METHOD_SETELEVATION = "setElevation";
+	private static final int kSDK_LEVEL_JELLYBEANMR1 = 17;
 	private static final int kSDK_LEVEL_LOLLIPOP = 21;
 	
 	private WeakReference<Context> mWeakCtx;
@@ -43,10 +51,13 @@ public class ShadowViewDecorator {
 			@Override
 			public void run() {
 				Bitmap bitmapCurrent = convertToBitmap(aView.getBackground(), aView.getWidth(), aView.getHeight());
+				int bitmapCurrentWidth = bitmapCurrent.getWidth();
+				int bitmapCurrentHeight = bitmapCurrent.getHeight();
+				
 				Bitmap bitmapAlpha = bitmapCurrent.extractAlpha();
-				final Bitmap bitmap = Bitmap.createBitmap(bitmapCurrent.getWidth(), bitmapCurrent.getHeight(), Config.ARGB_8888);
-				Rect rectSrc = new Rect(0, 0, bitmapCurrent.getWidth(), bitmapCurrent.getHeight());
-				Rect rectDest = new Rect(0, 0, bitmapCurrent.getWidth(), bitmapCurrent.getHeight());
+				final Bitmap bitmap = Bitmap.createBitmap(bitmapCurrentWidth, bitmapCurrentHeight, Config.ARGB_8888);
+				Rect rectSrc = new Rect(0, 0, bitmapCurrentWidth, bitmapCurrentHeight);
+				Rect rectDest = new Rect(0, 0, bitmapCurrentWidth, bitmapCurrentHeight);
 				
 				Paint paint = new Paint();
 				paint.setColor(aShadowColor);
@@ -82,10 +93,13 @@ public class ShadowViewDecorator {
 			@Override
 			public void run() {
 				Bitmap bitmapCurrent = convertToBitmap(aView.getBackground(), aView.getWidth(), aView.getHeight());
+				int bitmapCurrentWidth = bitmapCurrent.getWidth();
+				int bitmapCurrentHeight = bitmapCurrent.getHeight();
+				
 				Bitmap bitmapAlpha = bitmapCurrent.extractAlpha();
-				final Bitmap bitmap = Bitmap.createBitmap(bitmapCurrent.getWidth(), bitmapCurrent.getHeight(), Config.ARGB_8888);
-				Rect rectSrc = new Rect(0, 0, bitmapCurrent.getWidth(), bitmapCurrent.getHeight());
-				Rect rectDest = new Rect(aOffsetLeft, aOffsetTop, bitmapCurrent.getWidth(), bitmapCurrent.getHeight());
+				final Bitmap bitmap = Bitmap.createBitmap(bitmapCurrentWidth, bitmapCurrentHeight, Config.ARGB_8888);
+				Rect rectSrc = new Rect(0, 0, bitmapCurrentWidth, bitmapCurrentHeight);
+				Rect rectDest = new Rect(aOffsetLeft, aOffsetTop, bitmapCurrentWidth, bitmapCurrentHeight);
 				
 				Paint paint = new Paint();
 				paint.setColor(aShadowColor);
@@ -100,7 +114,7 @@ public class ShadowViewDecorator {
 					paint.setAlpha(alpha);
 					rectDest.set(rectDest.left + add, rectDest.top + add, rectDest.right - add, rectDest.bottom - add);
 				}
-				rectDest.set(aShadowSize, aShadowSize, bitmapCurrent.getWidth() - aShadowSize, bitmapCurrent.getHeight() - aShadowSize);
+				rectDest.set(aShadowSize, aShadowSize, bitmapCurrentWidth - aShadowSize, bitmapCurrentHeight - aShadowSize);
 				canvas.drawBitmap(bitmapCurrent, rectSrc, rectDest, null);
 				
 				mHandler.post(new Runnable() {
@@ -230,7 +244,6 @@ public class ShadowViewDecorator {
 				//2.draw the background we took of the view in the rectDest
 				rectDest.set(aShadowSize, aShadowSize, bitmapCurrent.getWidth() - aShadowSize, bitmapCurrent.getHeight() - aShadowSize);
 				canvas.drawBitmap(bitmapCurrent, rectSrc, rectDest, null);
-				
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
@@ -417,15 +430,74 @@ public class ShadowViewDecorator {
 		}
 	}
 	
+	public Bitmap createShadow(Bitmap aBitmap, int aShadowSize, int aShadowLayersCount, int aShadowColor, int aAlphaInit, int aAlphaStep)
+	{		
+			Bitmap bitmapCurrent = aBitmap;
+			int bitmapCurrentWidth = bitmapCurrent.getWidth();
+			int bitmapCurrentHeight = bitmapCurrent.getHeight();
+			
+			Bitmap bitmapAlpha = bitmapCurrent.extractAlpha();
+			final Bitmap bitmap = Bitmap.createBitmap(bitmapCurrentWidth, bitmapCurrentHeight, Config.ARGB_8888);
+			Rect rectSrc = new Rect(0, 0, bitmapCurrentWidth, bitmapCurrentHeight);
+			Rect rectDest = new Rect(0, 0, bitmapCurrentWidth, bitmapCurrentHeight);
+				
+			Paint paint = new Paint();
+			paint.setColor(aShadowColor);
+			paint.setAlpha(aAlphaInit);
+			Canvas canvas = new Canvas(bitmap);
+				
+			int add = aShadowSize / aShadowLayersCount;
+			for(int x = 0; x < aShadowLayersCount; x++) {
+				canvas.drawBitmap(bitmapAlpha, rectSrc, rectDest, paint);
+				int alpha = paint.getAlpha() + aAlphaStep;
+				if(alpha > 255) {alpha = 255;}
+				paint.setAlpha(alpha);
+				rectDest.set(rectDest.left + add, rectDest.top + add, rectDest.right - add, rectDest.bottom - add);
+			}
+			canvas.drawBitmap(bitmapCurrent, rectSrc, rectDest, null);
+			return bitmap;
+	}
+	
+	public Bitmap createShadowOffset(Bitmap aBitmap, int aOffsetLeft, int aOffsetTop, int aShadowSize, int aShadowLayersCount, 
+				int aShadowColor, int aAlphaInit, int aAlphaStep, ChangeMargins aChangeMargins, boolean aCreateNewBitmap)
+	{	
+		Bitmap bitmapCurrent = aBitmap;
+		int bitmapCurrentWidth = bitmapCurrent.getWidth();
+		int bitmapCurrentHeight = bitmapCurrent.getHeight();
+		
+		Bitmap bitmapAlpha = bitmapCurrent.extractAlpha();
+		Bitmap bitmap = Bitmap.createBitmap(bitmapCurrentWidth, bitmapCurrentHeight, Config.ARGB_8888);
+		Rect rectSrc = new Rect(0, 0, bitmapCurrentWidth, bitmapCurrentHeight);
+		Rect rectDest = new Rect(aOffsetLeft, aOffsetTop, bitmapCurrentWidth, bitmapCurrentHeight);
+				
+		Paint paint = new Paint();
+		paint.setColor(aShadowColor);
+		paint.setAlpha(aAlphaInit);
+		Canvas canvas = new Canvas(bitmap);
+				
+		int add = aShadowSize / aShadowLayersCount;
+		for(int x = 0; x < aShadowLayersCount; x++) {
+			canvas.drawBitmap(bitmapAlpha, rectSrc, rectDest, paint);
+			int alpha = paint.getAlpha() + aAlphaStep;
+			if(alpha > 255) {alpha = 255;}
+			paint.setAlpha(alpha);
+			rectDest.set(rectDest.left + add, rectDest.top + add, rectDest.right - add, rectDest.bottom - add);
+		}
+		rectDest.set(aShadowSize, aShadowSize, bitmapCurrentWidth - aShadowSize, bitmapCurrentHeight - aShadowSize);
+		canvas.drawBitmap(bitmapCurrent, rectSrc, rectDest, null);
+		return bitmap;
+	}
+	
+	
 	/* Utils */
 	public static Bitmap convertToBitmap(Drawable drawable, int widthPixels, int heightPixels) 
 	{
-		Bitmap mutableBitmap = Bitmap.createBitmap(widthPixels, heightPixels, Bitmap.Config.ARGB_8888);
-		Canvas canvas = new Canvas(mutableBitmap);
+		Bitmap bitmapRet = Bitmap.createBitmap(widthPixels, heightPixels, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmapRet);
 		drawable.setBounds(0, 0, widthPixels, heightPixels);
 		drawable.draw(canvas);
 
-		return mutableBitmap;
+		return bitmapRet;
 	}
 	
 	public static Bitmap boxBlur(Bitmap aBitmap, int aSize, boolean aCreateNewBitmap)
@@ -513,5 +585,23 @@ public class ShadowViewDecorator {
 				
 		canvas.drawBitmap(bitmap, rectSrc, rectDest, null);
 		return bitmap;
+	}
+	
+	public static Bitmap gaussianBlur(Context aCtx, Bitmap aBitmap, int aSize) 
+	{
+		Bitmap bitmapRet = aBitmap;
+		if(android.os.Build.VERSION.SDK_INT >= kSDK_LEVEL_JELLYBEANMR1) {
+			RenderScript rs = RenderScript.create(aCtx);
+			final Allocation input = Allocation.createFromBitmap(rs, bitmapRet);
+			final Allocation output = Allocation.createTyped(rs, input.getType());
+			final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+			script.setRadius(aSize);
+			script.setInput(input);
+			script.forEach(output);
+			output.copyTo(bitmapRet);
+		} else {
+			Log.w(LOG, STR_SDK_LESS_THAN_JELLYBEANMR1 + android.os.Build.VERSION.SDK_INT);
+		}
+		return bitmapRet;
 	}
 }

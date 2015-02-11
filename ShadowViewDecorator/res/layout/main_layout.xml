@@ -4,16 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:padding="8dp"
-    tools:context="com.blogspot.techzealous.shadowviewdecorator.MainActivity" >
-    
-    <Button
-        android:id="@+id/buttonNext"
-        android:layout_width="60dp"
-        android:layout_height="58dp"
-        android:layout_toRightOf="@+id/buttonRectLeft"
-        android:text="Next"
-        android:background="@android:color/holo_green_light" />
+    android:padding="20dp"
+    tools:context="com.blogspot.techzealous.shadowviewdecorator.MainActivity" >   
     
     <Button
         android:id="@+id/buttonRectLeft"
@@ -48,5 +40,23 @@
         	android:text="+"
         	android:background="@drawable/circle_60x60" />
     </LinearLayout>
+    
+    <Button
+       	android:id="@+id/buttonArrow"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/buttonRectRoundRight"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/arrow" />
+    
+    <TextView
+        android:id="@+id/textViewHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/buttonArrow"
+        android:background="@color/red" />
     
 </RelativeLayout>

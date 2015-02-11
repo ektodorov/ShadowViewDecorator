@@ -488,6 +488,42 @@ public class ShadowViewDecorator {
 		return bitmap;
 	}
 	
+	public Bitmap createShadow(Bitmap aBitmap, int aShadowSize, int aShadowLayersCount, int aShadowColor, int aAlphaInit, int aAlphaStep,
+			boolean aShadowLeft, boolean aShadowRight, boolean aShadowTop, boolean aShadowBottom)
+	{		
+			Bitmap bitmapCurrent = aBitmap;
+			int bitmapCurrentWidth = bitmapCurrent.getWidth();
+			int bitmapCurrentHeight = bitmapCurrent.getHeight();
+			
+			Bitmap bitmapAlpha = bitmapCurrent.extractAlpha();
+			final Bitmap bitmap = Bitmap.createBitmap(bitmapCurrentWidth, bitmapCurrentHeight, Config.ARGB_8888);
+			Rect rectSrc = new Rect(0, 0, bitmapCurrentWidth, bitmapCurrentHeight);
+			int left = aShadowLeft ? 0 : aShadowSize;
+			int top = aShadowTop ? 0 : aShadowSize;
+			int right = aShadowRight ? (bitmapCurrentWidth - left) : ((bitmapCurrentWidth - aShadowSize) - left);
+			int bottom = aShadowBottom ? (bitmapCurrentHeight - top) : ((bitmapCurrentHeight - aShadowSize) - top);
+			Rect rectDest = new Rect(left, top, right, bottom);
+			
+			Paint paint = new Paint();
+			paint.setColor(aShadowColor);
+			paint.setAlpha(aAlphaInit);
+			Canvas canvas = new Canvas(bitmap);
+				
+			int add = aShadowSize / aShadowLayersCount;
+			for(int x = 0; x < aShadowLayersCount; x++) {
+				canvas.drawBitmap(bitmapAlpha, rectSrc, rectDest, paint);
+				int alpha = paint.getAlpha() + aAlphaStep;
+				if(alpha > 255) {alpha = 255;}
+				paint.setAlpha(alpha);
+				rectDest.set(aShadowLeft ? (rectDest.left + add) : rectDest.left, aShadowTop ? (rectDest.top + add) : rectDest.top, 
+						aShadowRight ? (rectDest.right - add) : rectDest.right, aShadowBottom ? (rectDest.bottom - add) : rectDest.bottom);
+			}
+			
+			//rectDest.set(aShadowLeft ? rectDest.left : left, aShadowTop ? rectDest.top : top, aShadowRight ? rectDest.right : right, aShadowBottom ? rectDest.bottom : bottom);
+			canvas.drawBitmap(bitmapCurrent, rectSrc, rectDest, null);
+			return bitmap;
+	}
+	
 	
 	/* Utils */
 	public static Bitmap convertToBitmap(Drawable drawable, int widthPixels, int heightPixels) 

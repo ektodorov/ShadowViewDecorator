@@ -237,11 +237,8 @@ public class ShadowViewDecorator {
 					}
 				}
 				
-				//draw the blurred alpha	
 				canvas.drawBitmap(bitmap, rectSrc, rectSrc, null);
 				
-				//1.decrease the rectDest with the amount of the shadow
-				//2.draw the background we took of the view in the rectDest
 				rectDest.set(aShadowSize, aShadowSize, bitmapCurrent.getWidth() - aShadowSize, bitmapCurrent.getHeight() - aShadowSize);
 				canvas.drawBitmap(bitmapCurrent, rectSrc, rectDest, null);
 				mHandler.post(new Runnable() {
@@ -281,16 +278,12 @@ public class ShadowViewDecorator {
 				Method methodSetElevation = aView.getClass().getMethod(STR_METHOD_SETELEVATION, new Class[]{float.class});
 				methodSetElevation.invoke(aView, new Object[]{aElevation});
 			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
 				dropShadow(aView, aShadowSize, aShadowLayersCount, aShadowColor, aAlphaInit, aAlphaStep);
 			} catch (IllegalAccessException e) {
-				e.printStackTrace();
 				dropShadow(aView, aShadowSize, aShadowLayersCount, aShadowColor, aAlphaInit, aAlphaStep);
 			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
 				dropShadow(aView, aShadowSize, aShadowLayersCount, aShadowColor, aAlphaInit, aAlphaStep);
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
 				dropShadow(aView, aShadowSize, aShadowLayersCount, aShadowColor, aAlphaInit, aAlphaStep);
 			}
 		} else {
@@ -307,19 +300,15 @@ public class ShadowViewDecorator {
 				Method methodSetElevation = aView.getClass().getMethod(STR_METHOD_SETELEVATION, new Class[]{float.class});
 				methodSetElevation.invoke(aView, new Object[]{aElevation});
 			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
 				dropShadowOffset(aView, aOffsetLeft, aOffsetTop, aShadowSize, aShadowLayersCount, aShadowColor, 
 					aAlphaInit, aAlphaStep, aChangeMargins);
 			} catch (IllegalAccessException e) {
-				e.printStackTrace();
 				dropShadowOffset(aView, aOffsetLeft, aOffsetTop, aShadowSize, aShadowLayersCount, aShadowColor, 
 					aAlphaInit, aAlphaStep, aChangeMargins);
 			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
 				dropShadowOffset(aView, aOffsetLeft, aOffsetTop, aShadowSize, aShadowLayersCount, aShadowColor, 
 					aAlphaInit, aAlphaStep, aChangeMargins);
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
 				dropShadowOffset(aView, aOffsetLeft, aOffsetTop, aShadowSize, aShadowLayersCount, aShadowColor, 
 					aAlphaInit, aAlphaStep, aChangeMargins);
 			}
@@ -336,16 +325,12 @@ public class ShadowViewDecorator {
 				Method methodSetElevation = aView.getClass().getMethod(STR_METHOD_SETELEVATION, new Class[]{float.class});
 				methodSetElevation.invoke(aView, new Object[]{aElevation});
 			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
 				dropShadowBoxBlur(aView, aShadowSize, aShadowColor);
 			} catch (IllegalAccessException e) {
-				e.printStackTrace();
 				dropShadowBoxBlur(aView, aShadowSize, aShadowColor);
 			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
 				dropShadowBoxBlur(aView, aShadowSize, aShadowColor);
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
 				dropShadowBoxBlur(aView, aShadowSize, aShadowColor);
 			}
 		} else {
@@ -362,16 +347,12 @@ public class ShadowViewDecorator {
 				Method methodSetElevation = aView.getClass().getMethod(STR_METHOD_SETELEVATION, new Class[]{float.class});
 				methodSetElevation.invoke(aView, new Object[]{aElevation});
 			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
 				dropShadowBoxBlurOffset(aView, aShadowSize, aShadowColor, aOffsetLeft, aOffsetTop);
 			} catch (IllegalAccessException e) {
-				e.printStackTrace();
 				dropShadowBoxBlurOffset(aView, aShadowSize, aShadowColor, aOffsetLeft, aOffsetTop);
 			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
 				dropShadowBoxBlurOffset(aView, aShadowSize, aShadowColor, aOffsetLeft, aOffsetTop);
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
 				dropShadowBoxBlurOffset(aView, aShadowSize, aShadowColor, aOffsetLeft, aOffsetTop);
 			}
 		} else {
@@ -387,16 +368,12 @@ public class ShadowViewDecorator {
 				Method methodSetElevation = aView.getClass().getMethod(STR_METHOD_SETELEVATION, new Class[]{float.class});
 				methodSetElevation.invoke(aView, new Object[]{aElevation});
 			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
 				dropShadowGaussianBlur(aView, aShadowSize, aShadowColor);
 			} catch (IllegalAccessException e) {
-				e.printStackTrace();
 				dropShadowGaussianBlur(aView, aShadowSize, aShadowColor);
 			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
 				dropShadowGaussianBlur(aView, aShadowSize, aShadowColor);
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
 				dropShadowGaussianBlur(aView, aShadowSize, aShadowColor);
 			}
 		} else {
@@ -413,16 +390,12 @@ public class ShadowViewDecorator {
 				Method methodSetElevation = aView.getClass().getMethod(STR_METHOD_SETELEVATION, new Class[]{float.class});
 				methodSetElevation.invoke(aView, new Object[]{aElevation});
 			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
 				dropShadowGaussianBlurOffset(aView, aShadowSize, aShadowColor, aOffsetLeft, aOffsetTop);
 			} catch (IllegalAccessException e) {
-				e.printStackTrace();
 				dropShadowGaussianBlurOffset(aView, aShadowSize, aShadowColor, aOffsetLeft, aOffsetTop);
 			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
 				dropShadowGaussianBlurOffset(aView, aShadowSize, aShadowColor, aOffsetLeft, aOffsetTop);
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
 				dropShadowGaussianBlurOffset(aView, aShadowSize, aShadowColor, aOffsetLeft, aOffsetTop);
 			}
 		} else {
@@ -498,11 +471,7 @@ public class ShadowViewDecorator {
 			Bitmap bitmapAlpha = bitmapCurrent.extractAlpha();
 			final Bitmap bitmap = Bitmap.createBitmap(bitmapCurrentWidth, bitmapCurrentHeight, Config.ARGB_8888);
 			Rect rectSrc = new Rect(0, 0, bitmapCurrentWidth, bitmapCurrentHeight);
-			int left = aShadowLeft ? 0 : aShadowSize;
-			int top = aShadowTop ? 0 : aShadowSize;
-			int right = aShadowRight ? (bitmapCurrentWidth - left) : ((bitmapCurrentWidth - aShadowSize) - left);
-			int bottom = aShadowBottom ? (bitmapCurrentHeight - top) : ((bitmapCurrentHeight - aShadowSize) - top);
-			Rect rectDest = new Rect(left, top, right, bottom);
+			Rect rectDest = new Rect(0, 0, bitmapCurrentWidth, bitmapCurrentHeight);
 			
 			Paint paint = new Paint();
 			paint.setColor(aShadowColor);
@@ -519,7 +488,8 @@ public class ShadowViewDecorator {
 						aShadowRight ? (rectDest.right - add) : rectDest.right, aShadowBottom ? (rectDest.bottom - add) : rectDest.bottom);
 			}
 			
-			//rectDest.set(aShadowLeft ? rectDest.left : left, aShadowTop ? rectDest.top : top, aShadowRight ? rectDest.right : right, aShadowBottom ? rectDest.bottom : bottom);
+			rectDest.set(aShadowLeft ? rectDest.left : 0, aShadowTop ? rectDest.top : 0, 
+					aShadowRight ? rectDest.right : bitmapCurrentWidth, aShadowBottom ? rectDest.bottom : bitmapCurrentHeight);
 			canvas.drawBitmap(bitmapCurrent, rectSrc, rectDest, null);
 			return bitmap;
 	}

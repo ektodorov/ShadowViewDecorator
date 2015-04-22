@@ -21,16 +21,13 @@ import android.support.v8.renderscript.Allocation;
 import android.support.v8.renderscript.Element;
 import android.support.v8.renderscript.RenderScript;
 import android.support.v8.renderscript.ScriptIntrinsicBlur;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 public class ShadowViewDecorator {
 
 	private static final String LOG = "ShadowViewDecorator";
-	private static final String STR_SDK_LESS_THAN_JELLYBEANMR1 = "Warning current cannot make Guassian blur. ScriptIntrinsicBlur requires API Level 17+, current SDK Level is ";
 	private static final String STR_METHOD_SETELEVATION = "setElevation";
-	private static final int kSDK_LEVEL_JELLYBEANMR1 = 17;
 	private static final int kSDK_LEVEL_LOLLIPOP = 21;
 	
 	private WeakReference<Context> mWeakCtx;
@@ -596,18 +593,16 @@ public class ShadowViewDecorator {
 	public static Bitmap gaussianBlur(Context aCtx, Bitmap aBitmap, int aSize) 
 	{
 		Bitmap bitmapRet = aBitmap;
-		if(android.os.Build.VERSION.SDK_INT >= kSDK_LEVEL_JELLYBEANMR1) {
-			RenderScript rs = RenderScript.create(aCtx);
-			final Allocation input = Allocation.createFromBitmap(rs, bitmapRet);
-			final Allocation output = Allocation.createTyped(rs, input.getType());
-			final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
-			script.setRadius(aSize);
-			script.setInput(input);
-			script.forEach(output);
-			output.copyTo(bitmapRet);
-		} else {
-			Log.w(LOG, STR_SDK_LESS_THAN_JELLYBEANMR1 + android.os.Build.VERSION.SDK_INT);
-		}
+		
+		RenderScript rs = RenderScript.create(aCtx);
+		final Allocation input = Allocation.createFromBitmap(rs, bitmapRet);
+		final Allocation output = Allocation.createTyped(rs, input.getType());
+		final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+		script.setRadius(aSize);
+		script.setInput(input);
+		script.forEach(output);
+		output.copyTo(bitmapRet);
+		
 		return bitmapRet;
 	}
 }

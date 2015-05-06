@@ -256,9 +256,42 @@ public class ShadowViewDecorator {
 		
 	}
 	
-	public void dropShadowGaussianBlur(View aView, int aShadowSize, int aShadowColor)
+	public void dropShadowGaussianBlur(final View aView, final int aShadowSize, final int aShadowColor)
 	{
-		
+		mExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				Context ctx = mWeakCtx.get();
+				if(ctx == null) {return;}
+				
+				Bitmap bitmapCurrent = convertToBitmap(aView.getBackground(), aView.getWidth(), aView.getHeight());
+				int bitmapCurrentWidth = bitmapCurrent.getWidth();
+				int bitmapCurrentHeight = bitmapCurrent.getHeight();
+				
+				Rect rectDraw = new Rect(0, 0, bitmapCurrentWidth, bitmapCurrentHeight);
+				Paint paint = new Paint();
+				paint.setColor(aShadowColor);
+				final Bitmap bitmap = Bitmap.createBitmap(bitmapCurrentWidth, bitmapCurrentHeight, Config.ARGB_8888);
+				Canvas canvas = new Canvas(bitmap);
+				
+				Bitmap bitmapAlpha = Bitmap.createScaledBitmap(bitmapCurrent.extractAlpha(), 
+						bitmapCurrentWidth - aShadowSize, bitmapCurrentHeight - aShadowSize, false);
+
+				canvas.drawBitmap(bitmapAlpha, aShadowSize, aShadowSize, null);
+				Bitmap bitmapShadow = gaussianBlur(ctx, bitmap, aShadowSize);				
+				canvas.drawBitmap(bitmapShadow, 0, 0, paint);
+				canvas.drawBitmap(bitmapCurrent, rectDraw, rectDraw, null);
+				
+				mHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						Context ctx = mWeakCtx.get();
+						if(ctx == null) {return;}
+						aView.setBackgroundDrawable(new BitmapDrawable(ctx.getResources(), bitmap));
+					}
+				});
+			}
+		});
 	}
 	
 	public void dropShadowGaussianBlurOffset(View aView, int aShadowSize, int aShadowColor, int aOffsetLeft, int aOffsetTop)

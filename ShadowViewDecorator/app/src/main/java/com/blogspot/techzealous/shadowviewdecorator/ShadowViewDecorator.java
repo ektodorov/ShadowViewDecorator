@@ -42,7 +42,7 @@ public class ShadowViewDecorator {
 	}
 	
 	public void dropShadow(final View aView, final int aShadowSize, final int aShadowLayersCount, final int aShadowColor, 
-			final int aAlphaInit, final int aAlphaStep)
+			final int aAlphaInit, final int aAlphaStep, final boolean aIsExpand, final boolean aIsShouldChangeMargins)
 	{		
 		mExecutor.execute(new Runnable() {
 			@Override
@@ -52,10 +52,18 @@ public class ShadowViewDecorator {
 				int bitmapCurrentHeight = bitmapCurrent.getHeight();
 				
 				Bitmap bitmapAlpha = bitmapCurrent.extractAlpha();
-				final Bitmap bitmap = Bitmap.createBitmap(bitmapCurrentWidth, bitmapCurrentHeight, Config.ARGB_8888);
+				Bitmap bitmapTemp = null;
 				Rect rectSrc = new Rect(0, 0, bitmapCurrentWidth, bitmapCurrentHeight);
-				Rect rectDest = new Rect(0, 0, bitmapCurrentWidth, bitmapCurrentHeight);
-				
+				Rect rectDest = null;
+				if(aIsExpand) {
+					rectDest = new Rect(0, 0, bitmapCurrentWidth + (aShadowSize * 2), bitmapCurrentHeight + (aShadowSize * 2));
+					bitmapTemp = Bitmap.createBitmap(bitmapCurrentWidth + (aShadowSize * 2), bitmapCurrentHeight + (aShadowSize * 2), Config.ARGB_8888);
+				} else {
+					rectDest = new Rect(0, 0, bitmapCurrentWidth, bitmapCurrentHeight);
+					bitmapTemp = Bitmap.createBitmap(bitmapCurrentWidth, bitmapCurrentHeight, Config.ARGB_8888);
+				}
+				final Bitmap bitmap = bitmapTemp;
+
 				Paint paint = new Paint();
 				paint.setColor(aShadowColor);
 				paint.setAlpha(aAlphaInit);
@@ -77,6 +85,12 @@ public class ShadowViewDecorator {
 						if(ctx == null) {return;}
 						
 						aView.setBackgroundDrawable(new BitmapDrawable(ctx.getResources(), bitmap));
+                        if(aIsShouldChangeMargins) {
+                            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) aView.getLayoutParams();
+                            params.setMargins(params.leftMargin - aShadowSize, params.topMargin - aShadowSize,
+                                    params.rightMargin, params.bottomMargin);
+                            aView.setLayoutParams(params);
+                        }
 					}
 				});
 			}
@@ -84,7 +98,7 @@ public class ShadowViewDecorator {
 	}
 	
 	public void dropShadowOffset(final View aView, final int aOffsetLeft, final int aOffsetTop, final int aShadowSize, final int aShadowLayersCount, 
-			final int aShadowColor, final int aAlphaInit, final int aAlphaStep, final ChangeMargins aChangeMargins)
+			final int aShadowColor, final int aAlphaInit, final int aAlphaStep, final boolean aIsExpand, final ChangeMargins aChangeMargins)
 	{	
 		mExecutor.execute(new Runnable() {
 			@Override
@@ -94,10 +108,18 @@ public class ShadowViewDecorator {
 				int bitmapCurrentHeight = bitmapCurrent.getHeight();
 				
 				Bitmap bitmapAlpha = bitmapCurrent.extractAlpha();
-				final Bitmap bitmap = Bitmap.createBitmap(bitmapCurrentWidth, bitmapCurrentHeight, Config.ARGB_8888);
+                Bitmap bitmapTemp = null;
 				Rect rectSrc = new Rect(0, 0, bitmapCurrentWidth, bitmapCurrentHeight);
-				Rect rectDest = new Rect(aOffsetLeft, aOffsetTop, bitmapCurrentWidth, bitmapCurrentHeight);
-				
+				Rect rectDest = null;
+				if(aIsExpand) {
+                    rectDest = new Rect(0, 0, bitmapCurrentWidth + (aShadowSize * 2), bitmapCurrentHeight + (aShadowSize * 2));
+                    bitmapTemp = Bitmap.createBitmap(bitmapCurrentWidth + (aShadowSize * 2), bitmapCurrentHeight + (aShadowSize * 2), Config.ARGB_8888);
+                } else {
+                    rectDest = new Rect(aOffsetLeft, aOffsetTop, bitmapCurrentWidth, bitmapCurrentHeight);
+                    bitmapTemp = Bitmap.createBitmap(bitmapCurrentWidth, bitmapCurrentHeight, Config.ARGB_8888);
+                }
+                final Bitmap bitmap = bitmapTemp;
+
 				Paint paint = new Paint();
 				paint.setColor(aShadowColor);
 				paint.setAlpha(aAlphaInit);
@@ -128,7 +150,7 @@ public class ShadowViewDecorator {
 //						if(aChangeMargins.changeRight) {params.rightMargin = params.rightMargin - aShadowSize;}
 //						if(aChangeMargins.changeBottom) {params.bottomMargin = params.bottomMargin - aShadowSize;}
 						params.setMargins((aChangeMargins.changeLeft) ? params.leftMargin - aShadowSize : params.leftMargin, 
-								(aChangeMargins.changeTop) ? params.topMargin - aShadowSize : params.topMargin, 
+								(aChangeMargins.changeTop) ? params.topMargin - aShadowSize : params.topMargin,
 								(aChangeMargins.changeRight) ? params.rightMargin - aShadowSize : params.rightMargin, 
 								(aChangeMargins.changeBottom) ? params.bottomMargin - aShadowSize : params.bottomMargin);
 					}
@@ -300,7 +322,7 @@ public class ShadowViewDecorator {
 	}
 	
 	public void dropShadowCompat(View aView, int aShadowSize, int aShadowLayersCount, int aShadowColor, 
-			int aAlphaInit, int aAlphaStep, float aElevation)
+			int aAlphaInit, int aAlphaStep, float aElevation, boolean aIsExpand, boolean aIsShouldChangeMargins)
 	{
 		int sdkLevel = android.os.Build.VERSION.SDK_INT;
 		if(sdkLevel >= kSDK_LEVEL_LOLLIPOP) {
@@ -308,21 +330,21 @@ public class ShadowViewDecorator {
 				Method methodSetElevation = aView.getClass().getMethod(STR_METHOD_SETELEVATION, new Class[]{float.class});
 				methodSetElevation.invoke(aView, new Object[]{aElevation});
 			} catch (NoSuchMethodException e) {
-				dropShadow(aView, aShadowSize, aShadowLayersCount, aShadowColor, aAlphaInit, aAlphaStep);
+				dropShadow(aView, aShadowSize, aShadowLayersCount, aShadowColor, aAlphaInit, aAlphaStep, aIsExpand, aIsShouldChangeMargins);
 			} catch (IllegalAccessException e) {
-				dropShadow(aView, aShadowSize, aShadowLayersCount, aShadowColor, aAlphaInit, aAlphaStep);
+				dropShadow(aView, aShadowSize, aShadowLayersCount, aShadowColor, aAlphaInit, aAlphaStep, aIsExpand, aIsShouldChangeMargins);
 			} catch (IllegalArgumentException e) {
-				dropShadow(aView, aShadowSize, aShadowLayersCount, aShadowColor, aAlphaInit, aAlphaStep);
+				dropShadow(aView, aShadowSize, aShadowLayersCount, aShadowColor, aAlphaInit, aAlphaStep, aIsExpand, aIsShouldChangeMargins);
 			} catch (InvocationTargetException e) {
-				dropShadow(aView, aShadowSize, aShadowLayersCount, aShadowColor, aAlphaInit, aAlphaStep);
+				dropShadow(aView, aShadowSize, aShadowLayersCount, aShadowColor, aAlphaInit, aAlphaStep, aIsExpand, aIsShouldChangeMargins);
 			}
 		} else {
-			dropShadow(aView, aShadowSize, aShadowLayersCount, aShadowColor, aAlphaInit, aAlphaStep);
+			dropShadow(aView, aShadowSize, aShadowLayersCount, aShadowColor, aAlphaInit, aAlphaStep, aIsExpand, aIsShouldChangeMargins);
 		}
 	}
 	
 	public void dropShadowOffsetCompat(View aView, int aOffsetLeft, int aOffsetTop, int aShadowSize, int aShadowLayersCount, int aShadowColor, 
-			int aAlphaInit, int aAlphaStep, ChangeMargins aChangeMargins, float aElevation)
+			int aAlphaInit, int aAlphaStep, boolean aIsExpand, ChangeMargins aChangeMargins, float aElevation)
 	{
 		int sdkLevel = android.os.Build.VERSION.SDK_INT;
 		if(sdkLevel >= kSDK_LEVEL_LOLLIPOP) {
@@ -331,19 +353,20 @@ public class ShadowViewDecorator {
 				methodSetElevation.invoke(aView, new Object[]{aElevation});
 			} catch (NoSuchMethodException e) {
 				dropShadowOffset(aView, aOffsetLeft, aOffsetTop, aShadowSize, aShadowLayersCount, aShadowColor, 
-					aAlphaInit, aAlphaStep, aChangeMargins);
+					aAlphaInit, aAlphaStep, aIsExpand, aChangeMargins);
 			} catch (IllegalAccessException e) {
 				dropShadowOffset(aView, aOffsetLeft, aOffsetTop, aShadowSize, aShadowLayersCount, aShadowColor, 
-					aAlphaInit, aAlphaStep, aChangeMargins);
+					aAlphaInit, aAlphaStep, aIsExpand, aChangeMargins);
 			} catch (IllegalArgumentException e) {
 				dropShadowOffset(aView, aOffsetLeft, aOffsetTop, aShadowSize, aShadowLayersCount, aShadowColor, 
-					aAlphaInit, aAlphaStep, aChangeMargins);
+					aAlphaInit, aAlphaStep, aIsExpand, aChangeMargins);
 			} catch (InvocationTargetException e) {
 				dropShadowOffset(aView, aOffsetLeft, aOffsetTop, aShadowSize, aShadowLayersCount, aShadowColor, 
-					aAlphaInit, aAlphaStep, aChangeMargins);
+					aAlphaInit, aAlphaStep, aIsExpand, aChangeMargins);
 			}
 		} else {
-			dropShadowOffset(aView, aOffsetLeft, aOffsetTop, aShadowSize, aShadowLayersCount, aShadowColor, aAlphaInit, aAlphaStep, aChangeMargins);
+			dropShadowOffset(aView, aOffsetLeft, aOffsetTop, aShadowSize, aShadowLayersCount, aShadowColor, aAlphaInit, aAlphaStep,
+                    aIsExpand, aChangeMargins);
 		}
 	}
 	

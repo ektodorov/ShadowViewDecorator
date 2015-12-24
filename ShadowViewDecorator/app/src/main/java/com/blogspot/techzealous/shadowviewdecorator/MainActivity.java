@@ -60,10 +60,13 @@ public class MainActivity extends Activity {
 		rl.post(new Runnable() {
 			@Override
 			public void run() {
-				mDecorator.dropShadow(mButtonRect, 4, 4, Color.BLACK, 20, 5);
-				mDecorator.dropShadow(mButtonRectRound, 4, 4, Color.BLACK, 20, 5);
-				mDecorator.dropShadow(mButtonCircle, 4, 4, Color.BLACK, 20, 5);
-				mDecorator.dropShadow(mButtonArrow, 4, 4, Color.BLACK, 20, 5);
+                ChangeMargins changeMargins = new ChangeMargins(false, false, false, false);
+				mDecorator.dropShadowOffset(mButtonRect, 4, 4, 4, 4, Color.BLACK, 20, 5, false, changeMargins);
+
+                //mDecorator.dropShadow(mButtonRect, 4, 4, Color.BLACK, 20, 5, true, true);
+                mDecorator.dropShadow(mButtonRectRound, 4, 4, Color.BLACK, 20, 5, false, false);
+				mDecorator.dropShadow(mButtonCircle, 4, 4, Color.BLACK, 20, 5, false, false);
+				mDecorator.dropShadow(mButtonArrow, 4, 4, Color.BLACK, 20, 5, false, false);
 				Bitmap bitmap = ShadowViewDecorator.convertToBitmap(mTextViewHorizontal.getBackground(), 
 						mTextViewHorizontal.getWidth(), mTextViewHorizontal.getHeight());
 				Bitmap bitmpaShadow = mDecorator.createShadow(bitmap, 3, 3, Color.BLACK, 30, 10, false, false, false, true);

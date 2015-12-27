@@ -27,7 +27,7 @@ import java.util.concurrent.Executors;
 public class ShadowViewDecorator {
 
 	private static final String LOG = "ShadowViewDecorator";
-	private static final String STR_METHOD_SETELEVATION = "setElevation";
+	private static final String STR_METHOD_setElevation = "setElevation";
 	private static final int kSDK_LEVEL_LOLLIPOP = 21;
 
 	private WeakReference<Context> mWeakCtx;
@@ -507,7 +507,7 @@ public class ShadowViewDecorator {
 		int sdkLevel = android.os.Build.VERSION.SDK_INT;
 		if(sdkLevel >= kSDK_LEVEL_LOLLIPOP) {
 			try {
-				Method methodSetElevation = aView.getClass().getMethod(STR_METHOD_SETELEVATION, new Class[]{float.class});
+				Method methodSetElevation = aView.getClass().getMethod(STR_METHOD_setElevation, new Class[]{float.class});
 				methodSetElevation.invoke(aView, new Object[]{aElevation});
 			} catch (NoSuchMethodException e) {
 				dropShadow(aView, aShadowSize, aShadowLayersCount, aShadowColor, aAlphaInit, aAlphaStep, aIsExpand, aIsShouldChangeMargins);
@@ -545,7 +545,7 @@ public class ShadowViewDecorator {
 		int sdkLevel = android.os.Build.VERSION.SDK_INT;
 		if(sdkLevel >= kSDK_LEVEL_LOLLIPOP) {
 			try {
-				Method methodSetElevation = aView.getClass().getMethod(STR_METHOD_SETELEVATION, new Class[]{float.class});
+				Method methodSetElevation = aView.getClass().getMethod(STR_METHOD_setElevation, new Class[]{float.class});
 				methodSetElevation.invoke(aView, new Object[]{aElevation});
 			} catch (NoSuchMethodException e) {
 				dropShadowOffset(aView, aOffsetLeft, aOffsetTop, aShadowSize, aShadowLayersCount, aShadowColor,
@@ -580,7 +580,7 @@ public class ShadowViewDecorator {
 		int sdkLevel = android.os.Build.VERSION.SDK_INT;
 		if(sdkLevel >= kSDK_LEVEL_LOLLIPOP) {
 			try {
-				Method methodSetElevation = aView.getClass().getMethod(STR_METHOD_SETELEVATION, new Class[]{float.class});
+				Method methodSetElevation = aView.getClass().getMethod(STR_METHOD_setElevation, new Class[]{float.class});
 				methodSetElevation.invoke(aView, new Object[]{aElevation});
 			} catch (NoSuchMethodException e) {
 				dropShadowBoxBlur(aView, aShadowSize, aShadowColor);
@@ -611,7 +611,7 @@ public class ShadowViewDecorator {
 		int sdkLevel = android.os.Build.VERSION.SDK_INT;
 		if(sdkLevel >= kSDK_LEVEL_LOLLIPOP) {
 			try {
-				Method methodSetElevation = aView.getClass().getMethod(STR_METHOD_SETELEVATION, new Class[]{float.class});
+				Method methodSetElevation = aView.getClass().getMethod(STR_METHOD_setElevation, new Class[]{float.class});
 				methodSetElevation.invoke(aView, new Object[]{aElevation});
 			} catch (NoSuchMethodException e) {
 				dropShadowGaussianBlur(aView, aShadowSize, aShadowColor, aIsExpand);
@@ -645,7 +645,7 @@ public class ShadowViewDecorator {
 		int sdkLevel = android.os.Build.VERSION.SDK_INT;
 		if(sdkLevel >= kSDK_LEVEL_LOLLIPOP) {
 			try {
-				Method methodSetElevation = aView.getClass().getMethod(STR_METHOD_SETELEVATION, new Class[]{float.class});
+				Method methodSetElevation = aView.getClass().getMethod(STR_METHOD_setElevation, new Class[]{float.class});
 				methodSetElevation.invoke(aView, new Object[]{aElevation});
 			} catch (NoSuchMethodException e) {
 				dropShadowGaussianBlurOffset(aView, aShadowSize, aShadowColor, aOffsetLeft, aOffsetTop, aIsExpand);

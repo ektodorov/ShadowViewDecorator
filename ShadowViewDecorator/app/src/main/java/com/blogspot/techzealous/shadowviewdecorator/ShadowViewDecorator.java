@@ -72,7 +72,7 @@ public class ShadowViewDecorator {
      */
     public void boxShadowBoxBlur(View aView, int aHorizontalShadow, int aVerticalShadow, int aBlur, int aSpread, int aColor)
     {
-        dropShadowBoxBlur(aView, aBlur, aColor, aHorizontalShadow, aVerticalShadow, true);
+        dropShadowBoxBlur(aView, aBlur + aSpread, aColor, aHorizontalShadow, aVerticalShadow, true);
     }
 
     /**

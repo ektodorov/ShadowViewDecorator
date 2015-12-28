@@ -350,7 +350,6 @@ public class ShadowViewDecorator {
 
     /**
      * Drops offset shadow using GaussianBlur with Renderscript.
-     * Has some issues with negative offset values.
      * @param aView - view which to decorate with a shadow.
      * @param aShadowSize - size of the shadow in pixels.
      * @param aShadowColor - color of the shadow.
@@ -373,6 +372,8 @@ public class ShadowViewDecorator {
                 int currentHeight = bitmapCurrent.getHeight();
                 int offsetLeft = Math.abs(aOffsetLeft);
                 int offsetTop = Math.abs(aOffsetTop);
+                int offsetLeftAdd = offsetLeft;
+                int offsetTopAdd = offsetTop;
 
                 Rect rectSrc = new Rect(0, 0, currentWidth, currentHeight);
                 Rect rectDest = null;
@@ -394,9 +395,18 @@ public class ShadowViewDecorator {
                 Paint paint = new Paint();
                 paint.setColor(aShadowColor);
                 Canvas canvas = new Canvas(bitmap);
-                canvas.drawBitmap(bitmapAlpha, aShadowSize + aOffsetLeft, aShadowSize + aOffsetTop, null);
+
+                if(aOffsetLeft < 0) {offsetLeftAdd = 0;}
+                if(aOffsetTop < 0) {offsetTopAdd = 0;}
+
+                canvas.drawBitmap(bitmapAlpha, aShadowSize + offsetLeftAdd, aShadowSize + offsetTopAdd, null);
                 Bitmap bitmapShadow = gaussianBlur(ctx, bitmap, aShadowSize);
                 canvas.drawBitmap(bitmapShadow, 0, 0, paint);
+
+                if(aOffsetLeft < 0) {offsetLeftAdd = offsetLeft;} else {offsetLeftAdd = 0;}
+                if(aOffsetTop < 0) {offsetTopAdd = offsetTop;} else {offsetTopAdd = 0;}
+
+                rectDest.set(aShadowSize + offsetLeftAdd, aShadowSize + offsetTopAdd, rectDest.right + offsetLeftAdd, rectDest.bottom + offsetTopAdd);
                 canvas.drawBitmap(bitmapCurrent, rectSrc, rectDest, null);
 
                 mHandler.post(new Runnable() {

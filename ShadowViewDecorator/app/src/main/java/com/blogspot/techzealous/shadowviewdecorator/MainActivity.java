@@ -63,7 +63,7 @@ public class MainActivity extends Activity {
                 //mDecorator.dropShadowBoxBlur(mButtonRect, 4, Color.BLACK, 10, 10, true);
                 //mDecorator.boxShadow(mButtonRect, 4, 4, 0, -2, Color.BLACK, 100, 10);
                 //mDecorator.boxShadowGaussian(mButtonRect, 4, 4, 0, -2, Color.BLACK);
-				mDecorator.dropShadowGaussianBlur(mButtonRect, 4, Color.BLACK, 10, 10, true);
+				mDecorator.dropShadowGaussianBlur(mButtonRect, 4, Color.BLACK, -4, -4, true);
 
                 //mDecorator.dropShadow(mButtonRect, 4, 4, Color.BLACK, 20, 5, true, true);
 				mDecorator.dropShadow(mButtonRectRound, 4, 4, Color.BLACK, 20, 5, 0, 0, false, null);

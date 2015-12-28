@@ -86,7 +86,7 @@ public class ShadowViewDecorator {
      * @param aColor - shadow color.
      * @return void.
      */
-    public void boxShadowGaussian(View aView, int aHorizontalShadow, int aVerticalShadow, int aBlur, int aSpread, int aColor)
+    public void boxShadowGaussianBlur(View aView, int aHorizontalShadow, int aVerticalShadow, int aBlur, int aSpread, int aColor)
     {
         if(aSpread < 0) {aSpread = 0;}
         dropShadowGaussianBlur(aView, aBlur + aSpread, aColor, aHorizontalShadow, aVerticalShadow, true);

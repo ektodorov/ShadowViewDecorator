@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Log.i("MainActivity", "mButtonRect, onClick");
-
+				Log.i("MainActivity", "width=" + mButtonRect.getWidth() + ", height=" + mButtonRect.getHeight());
 			}
 		});
 
@@ -60,20 +60,15 @@ public class MainActivity extends Activity {
 		rl.post(new Runnable() {
 			@Override
 			public void run() {
-//                ChangeMargins changeMargins = new ChangeMargins(false, false, false, false);
-//				mDecorator.dropShadowOffset(mButtonRect, 4, 4, 4, 4, Color.BLACK, 20, 5, false, changeMargins);
-
-				//mDecorator.dropShadowGaussianBlur(mButtonRect, 4, Color.BLACK, true);
-                //mDecorator.dropShadowGaussianBlurOffset(mButtonRect, 4, Color.BLACK, 2, 2, true);
-                //mDecorator.dropShadowOffset(mButtonRect, 2, 1, Color.BLACK, 60, 10, 0, 0, true, null);
-                //mDecorator.dropShadowBoxBlur(mButtonRect, 4, Color.BLACK);
-                mDecorator.boxShadow(mButtonRect, 4, 4, 0, -2, Color.BLACK);
+                //mDecorator.dropShadowBoxBlur(mButtonRect, 4, Color.BLACK, 10, 10, true);
+                //mDecorator.boxShadow(mButtonRect, 4, 4, 0, -2, Color.BLACK, 100, 10);
                 //mDecorator.boxShadowGaussian(mButtonRect, 4, 4, 0, -2, Color.BLACK);
+				mDecorator.dropShadowGaussianBlur(mButtonRect, 4, Color.BLACK, 10, 10, true);
 
                 //mDecorator.dropShadow(mButtonRect, 4, 4, Color.BLACK, 20, 5, true, true);
-                mDecorator.dropShadow(mButtonRectRound, 4, 4, Color.BLACK, 20, 5, false, false);
-				mDecorator.dropShadow(mButtonCircle, 4, 4, Color.BLACK, 20, 5, false, false);
-				mDecorator.dropShadow(mButtonArrow, 4, 4, Color.BLACK, 20, 5, false, false);
+				mDecorator.dropShadow(mButtonRectRound, 4, 4, Color.BLACK, 20, 5, 0, 0, false, null);
+				mDecorator.dropShadow(mButtonCircle, 4, 4, Color.BLACK, 20, 5, 0, 0, false, null);
+				mDecorator.dropShadow(mButtonArrow, 4, 4, Color.BLACK, 20, 5, 0, 0, false, null);
 				Bitmap bitmap = ShadowViewDecorator.convertToBitmap(mTextViewHorizontal.getBackground(),
 						mTextViewHorizontal.getWidth(), mTextViewHorizontal.getHeight());
 				Bitmap bitmapShadow = mDecorator.createShadow(bitmap, 3, 3, Color.BLACK, 30, 10, false, false, false, true);

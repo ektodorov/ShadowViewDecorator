@@ -15,6 +15,11 @@ boxShadowBoxBlur<br>
 boxShadowGaussianBlur<br>
 
 <br>
+Short description:
+<a href="http://techzealous.blogspot.bg/2015/12/shadows-for-android-applications-pre.html">http://techzealous.blogspot.bg/2015/12/shadows-for-android-applications-pre.html</a><br>
+< href="http://techzealous.blogspot.bg/2015/02/drop-shadows-in-android-pre-lollipop.html">http://techzealous.blogspot.bg/2015/02/drop-shadows-in-android-pre-lollipop.html</a><br>
+
+<br>
 
 How to use:
 -----------
